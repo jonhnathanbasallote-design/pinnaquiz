@@ -1,0 +1,310 @@
+[
+  {
+    "id": "quiz_1792814381616",
+    "title": "asda",
+    "targetType": "SECTION",
+    "targetValue": "BSIT 1-A",
+    "cutoffTimeStr": "23:11",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "a",
+        "maxPoints": 1,
+        "options": [
+          "a",
+          "a",
+          "a",
+          "a"
+        ],
+        "correct": 0
+      }
+    ],
+    "globalEndTimeMs": 1792854660000
+  },
+  {
+    "id": "quiz_1792814406344",
+    "title": "TEST",
+    "targetType": "SECTION",
+    "targetValue": "BSIT 1-A",
+    "cutoffTimeStr": "23:11",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "aa",
+        "maxPoints": 1,
+        "options": [
+          "a",
+          "a",
+          "a",
+          "a"
+        ],
+        "correct": 0
+      },
+      {
+        "type": "essay",
+        "prompt": "asd",
+        "maxPoints": 10
+      }
+    ],
+    "globalEndTimeMs": 1792854660000
+  },
+  {
+    "id": "quiz_1792815167280",
+    "title": "sada",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "23:11",
+    "questions": [
+      {
+        "type": "tf",
+        "prompt": "sad",
+        "maxPoints": 1,
+        "correct": "True"
+      },
+      {
+        "type": "essay",
+        "prompt": "sad",
+        "maxPoints": 10
+      }
+    ],
+    "globalEndTimeMs": 1792854660000
+  },
+  {
+    "id": "quiz_1792815223904",
+    "title": "TEST",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "23:11",
+    "questions": [
+      {
+        "type": "tf",
+        "prompt": "121",
+        "maxPoints": 1,
+        "correct": "True"
+      }
+    ],
+    "globalEndTimeMs": 1792854660000
+  },
+  {
+    "id": "quiz_1792815393327",
+    "title": "TEST",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "23:12",
+    "questions": [
+      {
+        "type": "essay",
+        "prompt": "asd",
+        "maxPoints": 10
+      },
+      {
+        "type": "id",
+        "prompt": "sdasd",
+        "maxPoints": 1,
+        "correct": "asd"
+      }
+    ],
+    "globalEndTimeMs": 1792854720000
+  },
+  {
+    "id": "quiz_1792815681135",
+    "title": "TEST",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "23:11",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "123",
+        "maxPoints": 1,
+        "options": [
+          "213",
+          "213",
+          "213",
+          "213"
+        ],
+        "correct": 0
+      }
+    ],
+    "globalEndTimeMs": 1792854660000
+  },
+  {
+    "id": "quiz_1792815881976",
+    "title": "nathan",
+    "targetType": "STUDENT",
+    "targetValue": "2500310",
+    "cutoffTimeStr": "23:11",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "sad",
+        "maxPoints": 1,
+        "options": [
+          "asd",
+          "sad",
+          "asd",
+          "sad"
+        ],
+        "correct": 0
+      }
+    ],
+    "globalEndTimeMs": 1792854660000
+  },
+  {
+    "id": "quiz_1792815905184",
+    "title": "benj",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "23:23",
+    "questions": [
+      {
+        "type": "tf",
+        "prompt": "aa",
+        "maxPoints": 1,
+        "correct": "True"
+      },
+      {
+        "type": "mc",
+        "prompt": "asdasd",
+        "maxPoints": 1,
+        "options": [
+          "sadasd",
+          "sadasd",
+          "asdasd",
+          "asdasd"
+        ],
+        "correct": 0
+      }
+    ],
+    "globalEndTimeMs": 1792855380000
+  },
+  {
+    "id": "quiz_1792815932183",
+    "title": "cpeb",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-B",
+    "cutoffTimeStr": "23:22",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "asdsadasd",
+        "maxPoints": 1,
+        "options": [
+          "asdasdsa",
+          "sadasdasd",
+          "dsadasd",
+          "asdasd"
+        ],
+        "correct": 0
+      }
+    ],
+    "globalEndTimeMs": 1792855320000
+  },
+  {
+    "id": "quiz_1792846005608",
+    "title": "asdsad",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "20:50",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "asd",
+        "maxPoints": 1,
+        "options": [
+          "sada",
+          "asd",
+          "sadasd",
+          "asdasd"
+        ],
+        "correct": 0
+      }
+    ],
+    "globalEndTimeMs": 1792846200000
+  },
+  {
+    "id": "quiz_1792879197633",
+    "title": "TEST",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "06:01",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "aa",
+        "maxPoints": 1,
+        "options": [
+          "a",
+          "a",
+          "a",
+          "a"
+        ],
+        "correct": 0
+      },
+      {
+        "type": "essay",
+        "prompt": "aa",
+        "maxPoints": 10
+      }
+    ],
+    "globalEndTimeMs": 1792879260000
+  },
+  {
+    "id": "quiz_1792879313416",
+    "title": "test",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "12:00",
+    "questions": [
+      {
+        "type": "id",
+        "prompt": "sad",
+        "maxPoints": 1,
+        "correct": "sad"
+      }
+    ],
+    "globalEndTimeMs": 1792900800000
+  },
+  {
+    "id": "quiz_1792879379049",
+    "title": "wer",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "12:11",
+    "questions": [
+      {
+        "type": "mc",
+        "prompt": "aaa",
+        "maxPoints": 1,
+        "options": [
+          "a",
+          "a",
+          "a",
+          "a"
+        ],
+        "correct": 0
+      }
+    ],
+    "globalEndTimeMs": 1792901460000
+  },
+  {
+    "id": "quiz_1792879454392",
+    "title": "```",
+    "targetType": "SECTION",
+    "targetValue": "2CPE-A",
+    "cutoffTimeStr": "23:22",
+    "questions": [
+      {
+        "type": "essay",
+        "prompt": "aSas",
+        "maxPoints": 10
+      },
+      {
+        "type": "essay",
+        "prompt": "ASas",
+        "maxPoints": 10
+      }
+    ],
+    "globalEndTimeMs": 1792941720000
+  }
+]

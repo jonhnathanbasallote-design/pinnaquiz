@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pinnaquiz - Login</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1a1919;
+      --text-color: #ffffff;
+      --subtext-color: #888888;
+      --input-bg: #262626;
+      --border-color: #333333;
+    }
+
+    body.light-mode {
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-color: #1a1919;
+      --subtext-color: #666666;
+      --input-bg: #eef1f5;
+      --border-color: #cccccc;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .left-side {
+      flex: 1;
+      background-image: linear-gradient(rgba(46, 125, 50, 0.7), rgba(46, 125, 50, 0.7)), url('images/pnc3.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .right-side {
+      width: 420px;
+      background-color: var(--card-bg);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+    }
+
+    .theme-toggle-btn {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .right-side img { width: 80px; border-radius: 40px; margin: 0 auto; }
+    .right-side h1 { font-size: 1.5rem; color: #2e7d32; text-align: center; margin: 10px 0; }
+    .right-side h2 { font-family: 'UnifrakturCook', cursive, serif; font-size: 2rem; color: #2e7d32; text-align: center; margin: 0; }
+    .right-side p { color: var(--subtext-color); text-align: center; font-size: 14px; margin-bottom: 20px; }
+
+    .role-toggle { display: flex; gap: 10px; margin-bottom: 15px; }
+    .tab-btn { flex: 1; padding: 10px; background: var(--input-bg); color: var(--subtext-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .tab-btn.active { background: #2e7d32; color: #ffffff; border-color: #2e7d32; }
+
+    .login-form { display: flex; flex-direction: column; gap: 15px; }
+    .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--input-bg); color: var(--text-color); box-sizing: border-box; }
+    .login-btn { width: 100%; padding: 12px; background: #2e7d32; color: #ffffff; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    .login-btn:hover { background-color: #1b5e20; }
+    .error-message { color: #ff5252; font-size: 13px; text-align: center; display: none; margin: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="left-side"></div>
+
+  <div class="right-side">
+    <button class="theme-toggle-btn" onclick="toggleTheme()"> Theme</button>
+
+    <img src="images/image.png" alt="University Logo">
+    <h2>University of Cabuyao</h2>
+    <h1>PinnaQuiz</h1>
+    
+    <div class="role-toggle">
+      <button type="button" class="tab-btn active" id="studentTab">Student</button>
+      <button type="button" class="tab-btn" id="teacherTab">Teacher</button>
+    </div>
+
+    <p id="portalDescription">Sign in using iMPnC Account to start your quiz session.</p>
+    
+    <form class="login-form" id="loginForm">
+      <p id="errorMessage" class="error-message"></p>
+
+      <input type="text" id="idInput" class="input-field" placeholder="STUDENT NUMBER" required>
+      <input type="password" id="passwordInput" class="input-field" placeholder="PASSWORD" required>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+  </div>
+
+  <script>
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    }
+
+    const validStudents = ["2500310", "2500311", "2500312", "2500313", "2500314", "2500315"];
+    let currentRole = "student";
+
+    const studentTab = document.getElementById('studentTab');
+    const teacherTab = document.getElementById('teacherTab');
+    const idInput = document.getElementById('idInput');
+    const portalDescription = document.getElementById('portalDescription');
+    const errorMessage = document.getElementById('errorMessage');
+
+    studentTab.addEventListener('click', function() {
+      currentRole = "student";
+      studentTab.classList.add('active');
+      teacherTab.classList.remove('active');
+      idInput.placeholder = "STUDENT NUMBER";
+      portalDescription.textContent = "Sign in using iMPnC Account to start your quiz session.";
+      errorMessage.style.display = 'none';
+    });
+
+    teacherTab.addEventListener('click', function() {
+      currentRole = "teacher";
+      teacherTab.classList.add('active');
+      studentTab.classList.remove('active');
+      idInput.placeholder = "FACULTY ID / EMAIL";
+      portalDescription.textContent = "Sign in using Faculty Credentials to manage your quizzes.";
+      errorMessage.style.display = 'none';
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const idVal = idInput.value.trim();
+      const passVal = document.getElementById('passwordInput').value.trim();
+
+      if (currentRole === "student") {
+        if (validStudents.includes(idVal) && passVal === "password123") {
+          localStorage.setItem('activeStudentId', idVal);
+          window.location.href = "StudentDashboard.html";
+        } else {
+          errorMessage.textContent = "Invalid Student Number or Password.";
+          errorMessage.style.display = 'block';
+        }
+      } else {
+        if (idVal === "prof-admin" && passVal === "admin123") {
+          window.location.href = "TeacherDashboard.html";
+        } else {
+          errorMessage.textContent = "Invalid Faculty ID or Password.";
+          errorMessage.style.display = 'block';
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

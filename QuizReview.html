@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pinnaquiz - Exam Review Studio</title>
+  <style>
+    :root { 
+      --bg-color: #121212; 
+      --card-bg: #1a1919; 
+      --text-color: #ffffff; 
+      --input-bg: #262626; 
+      --border-color: #333333; 
+      --text-muted: #888888;
+    }
+    body.light-mode { 
+      --bg-color: #f4f6f9; 
+      --card-bg: #ffffff; 
+      --text-color: #1a1919; 
+      --input-bg: #eef1f5; 
+      --border-color: #e2e8f0; 
+      --text-muted: #666666;
+    }
+    body { 
+      margin: 0; 
+      font-family: Arial, sans-serif; 
+      background: var(--bg-color); 
+      color: var(--text-color); 
+      transition: background 0.3s, color 0.3s;
+    }
+    header { 
+      background: var(--card-bg); 
+      padding: 15px 30px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      border-bottom: 2px solid #2e7d32; 
+    }
+    .back-btn {
+      background-color: transparent; 
+      border: 1px solid #ff5252; 
+      color: #ff5252; 
+      padding: 6px 14px;
+      border-radius: 4px; 
+      cursor: pointer; 
+      font-size: 13px; 
+      font-weight: bold; 
+      text-decoration: none;
+      transition: all 0.25s ease-in-out;
+    }
+    .back-btn:hover { 
+      background-color: #ff5252; 
+      color: #ffffff; 
+      box-shadow: 0 0 12px rgba(255, 82, 82, 0.6); 
+      transform: translateY(-1px); 
+    }
+    .container { 
+      max-width: 800px; 
+      margin: 30px auto; 
+      background: var(--card-bg); 
+      padding: 25px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border-color); 
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .item-box { 
+      background: var(--input-bg); 
+      color: var(--text-color);
+      padding: 15px; 
+      margin-bottom: 15px; 
+      border-radius: 6px; 
+      border: 1px solid var(--border-color); 
+      transition: background 0.3s, border-color 0.3s;
+    }
+    input[type="number"] { 
+      width: 80px; 
+      padding: 6px; 
+      background: var(--card-bg); 
+      color: var(--text-color); 
+      border: 1px solid var(--border-color); 
+      border-radius: 5px; 
+    }
+    .essay-inputs { display: flex; gap: 15px; margin-top: 10px; align-items: center; }
+    .action-btn-group { display: flex; gap: 15px; margin-top: 20px; }
+    .btn-save { flex: 2; background: #2e7d32; color: #fff; padding: 12px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .btn-save:hover { background: #1b5e20; }
+    .btn-zero { flex: 1; background: transparent; border: 1px solid #ff5252; color: #ff5252; padding: 12px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: all 0.25s ease-in-out; }
+    .btn-zero:hover { background: #ff5252; color: #ffffff; box-shadow: 0 0 12px rgba(255, 82, 82, 0.6); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 style="color:#2e7d32; margin:0;">Submission Inspection Studio</h1>
+    <a href="TeacherDashboard.html" class="back-btn">← Back to Dashboard</a>
+  </header>
+
+  <div class="container">
+    <h2 id="studentMeta">Loading Submission...</h2>
+    <div id="reviewContainer"></div>
+    
+    <div class="action-btn-group">
+      <button class="btn-save" onclick="saveGrading()">Finalize & Publish Grade</button>
+      <button class="btn-zero" onclick="forceZeroPenalty()">⚠️ Force Zero (Cheat Penalty)</button>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const subId = urlParams.get('subId');
+    let targetSub = null, targetQuiz = null;
+
+    async function loadReviewData() {
+      const resSub = await fetch('/api/submissions');
+      const subs = await resSub.json();
+      targetSub = subs.find(s => s.id === subId);
+
+      if (!targetSub) {
+        document.getElementById('studentMeta').textContent = "Submission not found.";
+        return;
+      }
+
+      const resQuiz = await fetch('/api/quizzes');
+      const quizzes = await resQuiz.json();
+      targetQuiz = quizzes.find(q => q.id === targetSub.quizId);
+
+      document.getElementById('studentMeta').textContent = `${targetSub.studentId} - ${targetSub.quizTitle || 'Assessment'}`;
+      const container = document.getElementById('reviewContainer');
+      container.innerHTML = '';
+
+      if (!targetQuiz || !targetQuiz.questions) {
+        container.innerHTML = `<p style="color:var(--text-muted);">No detailed question breakdown available for this submission.</p>`;
+        return;
+      }
+
+      targetQuiz.questions.forEach((q, idx) => {
+        const rawAns = targetSub.userAnswers?.[idx];
+        let displayAns = 'No Answer';
+
+        if (rawAns !== undefined && rawAns !== null && rawAns !== '') {
+          if ((!q.type || q.type === 'mc') && q.options) {
+            const optIndex = parseInt(rawAns, 10);
+            displayAns = q.options[optIndex] !== undefined ? `${q.options[optIndex]} (Choice ${String.fromCharCode(65 + optIndex)})` : rawAns;
+          } else {
+            displayAns = rawAns;
+          }
+        }
+
+        const item = document.createElement('div');
+        item.className = 'item-box';
+
+        let bodyHtml = `<strong>Q${idx+1}: ${q.prompt}</strong> (${(q.type || 'MC').toUpperCase()})<br>`;
+        bodyHtml += `<p style="color:var(--text-muted); margin: 8px 0;">Student Answer: <span style="color:var(--text-color); font-weight:bold;">${displayAns}</span></p>`;
+
+        if (q.type === 'essay') {
+          const savedMax = targetSub.essayMaxPoints?.[idx] !== undefined ? targetSub.essayMaxPoints[idx] : (q.maxPoints || 10);
+          const savedScore = targetSub.essayGrades?.[idx] !== undefined ? Math.min(targetSub.essayGrades[idx], savedMax) : savedMax;
+
+          bodyHtml += `
+            <div class="essay-inputs">
+              <label style="font-size:13px;">Earned Score: 
+                <input type="number" class="essay-score" id="score_field_${idx}" data-idx="${idx}" min="0" max="${savedMax}" value="${savedScore}">
+              </label>
+              <label style="font-size:13px;">Max Essay Points: 
+                <input type="number" class="essay-max" id="max_field_${idx}" data-idx="${idx}" min="1" value="${savedMax}" onchange="updateScoreBounds(${idx})">
+              </label>
+            </div>
+          `;
+        } else {
+          let isCorrect = false;
+          if ((!q.type || q.type === 'mc') && parseInt(rawAns, 10) === q.correct) isCorrect = true;
+          if (q.type === 'tf' && rawAns === q.correct) isCorrect = true;
+          if (q.type === 'id' && rawAns && rawAns.toLowerCase() === q.correct) isCorrect = true;
+
+          bodyHtml += `<p style="font-size:12px; color:${isCorrect ? '#2e7d32' : '#d32f2f'}; margin:0;">${isCorrect ? '✓ Correct (1 point)' : '✕ Incorrect (0 points)'}</p>`;
+        }
+
+        item.innerHTML = bodyHtml;
+        container.appendChild(item);
+      });
+    }
+
+    function updateScoreBounds(idx) {
+      const scoreInput = document.getElementById(`score_field_${idx}`);
+      const maxInput = document.getElementById(`max_field_${idx}`);
+      
+      const newMax = parseInt(maxInput.value, 10) || 1;
+      scoreInput.max = newMax;
+
+      if (parseInt(scoreInput.value, 10) > newMax) {
+        scoreInput.value = newMax;
+      }
+    }
+
+    async function saveGrading() {
+      if (!targetSub || !targetQuiz) return;
+
+      let autoScore = 0;
+      let totalNonEssayPoints = 0;
+      const essayGrades = {};
+      const essayMaxPoints = {};
+
+      targetQuiz.questions.forEach((q, idx) => {
+        const rawAns = targetSub.userAnswers?.[idx];
+
+        if (q.type !== 'essay') {
+          totalNonEssayPoints += 1;
+          if ((!q.type || q.type === 'mc') && parseInt(rawAns, 10) === q.correct) autoScore++;
+          if (q.type === 'tf' && rawAns === q.correct) autoScore++;
+          if (q.type === 'id' && rawAns && rawAns.toLowerCase() === q.correct) autoScore++;
+        }
+      });
+
+      let essayScore = 0;
+      let essayTotalMax = 0;
+      let hasValidationError = false;
+
+      const scoreInputs = document.querySelectorAll('.essay-score');
+      const maxInputs = document.querySelectorAll('.essay-max');
+
+      scoreInputs.forEach((input, i) => {
+        const idx = input.dataset.idx;
+        let scoreVal = parseInt(input.value, 10) || 0;
+        const maxVal = parseInt(maxInputs[i].value, 10) || 1;
+
+        if (scoreVal > maxVal) {
+          alert(`Earned score (${scoreVal}) cannot exceed max points (${maxVal}) for Question ${parseInt(idx) + 1}.`);
+          hasValidationError = true;
+          return;
+        }
+
+        essayGrades[idx] = scoreVal;
+        essayMaxPoints[idx] = maxVal;
+
+        essayScore += scoreVal;
+        essayTotalMax += maxVal;
+      });
+
+      if (hasValidationError) return;
+
+      const finalScore = autoScore + essayScore;
+      const finalTotal = totalNonEssayPoints + essayTotalMax;
+
+      await fetch('/api/submissions/grade', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionId: targetSub.id,
+          updatedScore: finalScore,
+          updatedTotal: finalTotal,
+          essayGrades,
+          essayMaxPoints,
+          teacherChecked: true,
+          status: 'Graded'
+        })
+      });
+
+      alert(`Grades published! Final score: ${finalScore} / ${finalTotal}`);
+      window.location.href = 'TeacherDashboard.html';
+    }
+
+    async function forceZeroPenalty() {
+      if (!targetSub) return;
+
+      const confirmAction = confirm(`Are you sure you want to flag student ${targetSub.studentId} for cheating and set score to 0?`);
+      if (!confirmAction) return;
+
+      // Dynamically calculate the true maximum possible points across all questions
+      let actualMaxTotal = 0;
+      const maxInputs = document.querySelectorAll('.essay-max');
+      
+      if (targetQuiz && targetQuiz.questions) {
+        targetQuiz.questions.forEach((q, idx) => {
+          if (q.type === 'essay') {
+            const inputField = document.getElementById(`max_field_${idx}`);
+            const fieldMax = inputField ? parseInt(inputField.value, 10) : null;
+            const savedMax = targetSub.essayMaxPoints?.[idx];
+            actualMaxTotal += (fieldMax || savedMax || q.maxPoints || 10);
+          } else {
+            actualMaxTotal += 1;
+          }
+        });
+      } else {
+        actualMaxTotal = targetSub.total || 1;
+      }
+
+      await fetch('/api/submissions/grade', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionId: targetSub.id,
+          updatedScore: 0,
+          updatedTotal: actualMaxTotal,
+          essayGrades: {},
+          teacherChecked: true,
+          status: 'Flagged (Cheating Penalty)'
+        })
+      });
+
+      alert(`Student flagged! Assigned score: 0 / ${actualMaxTotal}`);
+      window.location.href = 'TeacherDashboard.html';
+    }
+
+    loadReviewData();
+  </script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pinnaquiz - Active Exam</title>
+  <style>
+    :root { 
+      --bg-color: #121212; 
+      --card-bg: #1a1919; 
+      --text-color: #ffffff; 
+      --input-bg: #262626; 
+      --border-color: #333; 
+    }
+    body.light-mode { 
+      --bg-color: #f4f6f9; 
+      --card-bg: #ffffff; 
+      --text-color: #1a1919; 
+      --input-bg: #eef1f5; 
+      --border-color: #ccc; 
+    }
+    body { 
+      margin: 0; 
+      font-family: Arial, sans-serif; 
+      background: var(--bg-color); 
+      color: var(--text-color); 
+      user-select: none; 
+    }
+    header { 
+      background: var(--card-bg); 
+      padding: 15px 30px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      border-bottom: 2px solid #2e7d32; 
+    }
+    .meta { display: flex; gap: 15px; align-items: center; }
+    .badge { 
+      background: rgba(255,82,82,0.2); 
+      color: #ff5252; 
+      border: 1px solid #ff5252; 
+      padding: 6px 12px; 
+      border-radius: 4px; 
+      font-weight: bold; 
+      font-size: 13px;
+    }
+    .timer { 
+      background: var(--input-bg); 
+      padding: 6px 12px; 
+      border-radius: 4px; 
+      font-weight: bold; 
+      color: #4caf50; 
+      font-size: 13px;
+    }
+    .container { 
+      max-width: 650px; 
+      margin: 40px auto; 
+      background: var(--card-bg); 
+      padding: 30px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border-color); 
+    }
+    .opt { 
+      display: block; 
+      background: var(--input-bg); 
+      padding: 12px; 
+      margin: 10px 0; 
+      border-radius: 5px; 
+      cursor: pointer; 
+    }
+    textarea, input[type="text"] { 
+      width: 100%; 
+      padding: 12px; 
+      background: var(--input-bg); 
+      color: var(--text-color); 
+      border: 1px solid var(--border-color); 
+      border-radius: 5px; 
+      box-sizing: border-box; 
+    }
+    .btn { 
+      background: #2e7d32; 
+      color: #fff; 
+      border: none; 
+      padding: 10px 20px; 
+      border-radius: 5px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      float: right; 
+    }
+    .modal { 
+      position: fixed; 
+      top: 0; left: 0; 
+      width: 100vw; height: 100vh; 
+      background: rgba(0,0,0,0.85); 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 1000;
+    }
+    .modal-box { 
+      background: var(--card-bg); 
+      border: 2px solid #ff5252; 
+      padding: 30px; 
+      text-align: center; 
+      border-radius: 8px; 
+      max-width: 400px;
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 id="examTitle" style="color:#2e7d32; margin:0; font-size:1.5rem;">Exam</h1>
+    <div class="meta">
+      <div class="badge" id="strikeCounter">Tab Switches: 0 / 3</div>
+      <div class="timer" id="timerDisplay">Syncing...</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="progressText" style="color:#888; margin-bottom:10px;">Question 1</div>
+    <h2 id="qPrompt" style="margin-top:0;">Loading...</h2>
+    <div id="optionsContainer"></div>
+    <button class="btn" id="nextBtn" onclick="handleNext()">Next</button>
+  </div>
+
+  <div class="modal hidden" id="warningModal">
+    <div class="modal-box">
+      <h2 style="color:#ff5252; margin-top:0;">⚠️ Security Alert</h2>
+      <p id="modalMsg">Switching tabs during an exam is strictly prohibited.</p>
+      <button style="background:#ff5252; color:#fff; border:none; padding:8px 16px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="closeModal()">Acknowledge</button>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+
+    const activeStudentId = localStorage.getItem('activeStudentId') || "2500310";
+    let quiz = null;
+    let currentIndex = 0;
+    let strikes = 0;
+    let isTerminated = false;
+    let isSubmittedNormally = false;
+    let userAnswers = {};
+    let timerInterval = null;
+
+    async function initQuiz() {
+      const activeQuizId = localStorage.getItem('currentActiveQuizId');
+      try {
+        const res = await fetch('/api/quizzes');
+        const allQuizzes = await res.json();
+        quiz = allQuizzes.find(q => q.id === activeQuizId);
+
+        if (!quiz) {
+          alert("Quiz not found.");
+          window.location.href = 'StudentDashboard.html';
+          return;
+        }
+
+        document.getElementById('examTitle').textContent = quiz.title;
+
+        // Global Cutoff Timer setup
+        let targetMs = quiz.globalEndTimeMs;
+        if (!targetMs && quiz.cutoffTimeStr) {
+          const parts = quiz.cutoffTimeStr.split(':');
+          const d = new Date();
+          d.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+          if (d.getTime() <= Date.now()) d.setDate(d.getDate() + 1);
+          targetMs = d.getTime();
+        } else if (!targetMs) {
+          targetMs = Date.now() + (15 * 60 * 1000);
+        }
+
+        timerInterval = setInterval(() => {
+          const remainingMs = targetMs - Date.now();
+          if (remainingMs <= 0) {
+            clearInterval(timerInterval);
+            alert("The global deadline has been reached! Submitting exam.");
+            finalizeSubmission(false, false);
+          } else {
+            const totalSecs = Math.floor(remainingMs / 1000);
+            const mins = Math.floor(totalSecs / 60);
+            const secs = totalSecs % 60;
+            const labelStr = quiz.cutoffTimeStr ? `Closes at ${quiz.cutoffTimeStr}` : 'Time Left';
+            document.getElementById('timerDisplay').textContent = 
+              `${labelStr} (${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')})`;
+          }
+        }, 1000);
+
+        renderQuestion();
+      } catch (err) {
+        alert("Error loading quiz data.");
+      }
+    }
+
+    // --- ANTI-CHEAT ENGINE ---
+
+    // 1. Tab-Switching Detection (3-Strikes Rule)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && !isTerminated && !isSubmittedNormally) {
+        strikes++;
+        document.getElementById('strikeCounter').textContent = `Tab Switches: ${strikes} / 3`;
+
+        if (strikes >= 3) {
+          isTerminated = true;
+          if (timerInterval) clearInterval(timerInterval);
+          alert("3 tab switches detected! Session terminated with 0 points.");
+          finalizeSubmission(true, true);
+        } else {
+          document.getElementById('modalMsg').textContent = 
+            `Tab switching is strictly monitored! You have ${3 - strikes} warning(s) remaining before automatic zero.`;
+          document.getElementById('warningModal').classList.remove('hidden');
+        }
+      }
+    });
+
+    function closeModal() {
+      document.getElementById('warningModal').classList.add('hidden');
+    }
+
+    // 2. Tab-Close / Window Reload Penalty (Force 0 Score via Beacon)
+    window.addEventListener('beforeunload', () => {
+      if (!isSubmittedNormally && !isTerminated) {
+        const payload = JSON.stringify({
+          id: 'sub_' + Date.now(),
+          quizId: quiz ? quiz.id : 'unknown',
+          quizTitle: quiz ? quiz.title : 'Assessment',
+          studentId: activeStudentId,
+          score: 0,
+          total: quiz ? quiz.questions.length : 0,
+          userAnswers,
+          status: 'Terminated (Tab Closed)',
+          teacherChecked: true,
+          timestamp: new Date().toISOString()
+        });
+
+        navigator.sendBeacon('/api/submissions', new Blob([payload], { type: 'application/json' }));
+      }
+    });
+
+    // --- RENDERING & SUBMISSION ---
+
+    function renderQuestion() {
+      const q = quiz.questions[currentIndex];
+      const qTypeStr = q.type ? q.type.toUpperCase() : 'MC';
+      document.getElementById('progressText').textContent = 
+        `Question ${currentIndex + 1} of ${quiz.questions.length} (${qTypeStr})`;
+      document.getElementById('qPrompt').textContent = q.prompt;
+
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+
+      const savedAns = userAnswers[currentIndex] || '';
+
+      if (!q.type || q.type === 'mc') {
+        q.options.forEach((opt, i) => {
+          const checked = savedAns === i.toString() ? 'checked' : '';
+          container.innerHTML += `<label class="opt"><input type="radio" name="ans" value="${i}" ${checked}> ${opt}</label>`;
+        });
+      } else if (q.type === 'tf') {
+        const tChecked = savedAns === 'True' ? 'checked' : '';
+        const fChecked = savedAns === 'False' ? 'checked' : '';
+        container.innerHTML = `
+          <label class="opt"><input type="radio" name="ans" value="True" ${tChecked}> True</label>
+          <label class="opt"><input type="radio" name="ans" value="False" ${fChecked}> False</label>
+        `;
+      } else if (q.type === 'id') {
+        container.innerHTML = `<input type="text" id="idAns" value="${savedAns}" placeholder="Type your answer here...">`;
+      } else if (q.type === 'essay') {
+        container.innerHTML = `<textarea id="essayAns" rows="5" placeholder="Type your essay response...">${savedAns}</textarea>`;
+      }
+
+      document.getElementById('nextBtn').textContent = 
+        currentIndex === quiz.questions.length - 1 ? 'Submit Exam' : 'Next';
+    }
+
+    function handleNext() {
+      const q = quiz.questions[currentIndex];
+
+      if (!q.type || q.type === 'mc' || q.type === 'tf') {
+        const sel = document.querySelector('input[name="ans"]:checked');
+        if (!sel) return alert("Please select an answer to proceed!");
+        userAnswers[currentIndex] = sel.value;
+      } else if (q.type === 'id') {
+        const val = document.getElementById('idAns').value.trim();
+        if (!val) return alert("Please type an answer to proceed!");
+        userAnswers[currentIndex] = val;
+      } else if (q.type === 'essay') {
+        const val = document.getElementById('essayAns').value.trim();
+        if (!val) return alert("Please provide an essay response to proceed!");
+        userAnswers[currentIndex] = val;
+      }
+
+      if (currentIndex < quiz.questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        finalizeSubmission(false, false);
+      }
+    }
+
+    async function finalizeSubmission(wasKicked, zeroOut) {
+      isSubmittedNormally = true;
+      if (timerInterval) clearInterval(timerInterval);
+
+      let autoScore = 0;
+      let hasEssay = false;
+
+      if (!zeroOut && quiz && quiz.questions) {
+        quiz.questions.forEach((q, idx) => {
+          const ans = userAnswers[idx];
+          if ((!q.type || q.type === 'mc') && parseInt(ans, 10) === q.correct) autoScore++;
+          if (q.type === 'tf' && ans === q.correct) autoScore++;
+          if (q.type === 'id' && ans && ans.toLowerCase() === q.correct) autoScore++;
+          if (q.type === 'essay') hasEssay = true;
+        });
+      }
+
+      const submissionData = {
+        id: 'sub_' + Date.now(),
+        quizId: quiz ? quiz.id : 'unknown',
+        quizTitle: quiz ? quiz.title : 'Assessment',
+        studentId: activeStudentId,
+        score: zeroOut ? 0 : autoScore,
+        total: quiz ? quiz.questions.length : 0,
+        userAnswers,
+        status: zeroOut ? 'Terminated (3 Strikes)' : (hasEssay ? 'Pending Review' : 'Graded'),
+        teacherChecked: zeroOut || !hasEssay,
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        await fetch('/api/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submissionData)
+        });
+      } catch (err) {
+        console.error("Error submitting quiz results.", err);
+      }
+
+      window.location.href = 'StudentDashboard.html';
+    }
+
+    initQuiz();
+  </script>
+</body>
+</html>

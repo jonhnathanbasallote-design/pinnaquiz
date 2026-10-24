@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pinnaquiz - Student Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root { --bg-color: #121212; --card-bg: #1a1919; --text-color: #ffffff; --border-color: #333; }
+    body.light-mode { --bg-color: #f4f6f9; --card-bg: #ffffff; --text-color: #1a1919; --border-color: #ccc; }
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; height: 100vh; }
+    header { background-color: var(--card-bg); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2e7d32; }
+    .brand h1 { font-family: Arial, sans-serif; font-size: 2rem; color: #2e7d32; margin: 0; }
+    .user-profile { display: flex; align-items: center; gap: 15px; }
+    .user-info { text-align: right; }
+    .user-name { font-weight: bold; margin: 0; color: var(--text-color); }
+    .user-id { font-size: 12px; color: #888888; margin: 0; }
+    .logout-btn {
+      background-color: transparent; border: 1px solid #ff5252; color: #ff5252; padding: 6px 14px;
+      border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; text-decoration: none;
+      transition: all 0.25s ease-in-out;
+    }
+    .logout-btn:hover { background-color: #ff5252; color: #ffffff; box-shadow: 0 0 12px rgba(255, 82, 82, 0.6); transform: translateY(-1px); }
+    .dashboard-container { display: flex; flex: 1; }
+    aside { width: 200px; background-color: var(--card-bg); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .nav-link { color: #cccccc; text-decoration: none; padding: 10px 15px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+    .nav-link.active, .nav-link:hover { background-color: #2e7d32; color: #ffffff; }
+    main { flex: 1; padding: 30px; overflow-y: auto; }
+    .section-title { font-size: 18px; margin-bottom: 15px; color: #2e7d32; }
+    .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .quiz-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+    .start-btn { width: 100%; background-color: #2e7d32; color: white; border: none; padding: 10px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    .start-btn:hover { background-color: #1b5e20; }
+    .data-table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border-radius: 8px; overflow: hidden; margin-bottom: 25px; }
+    .data-table th, .data-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+    .data-table th { background-color: rgba(0,0,0,0.2); color: #2e7d32; }
+    .score-badge { background-color: rgba(46, 125, 50, 0.2); color: #4caf50; border: 1px solid #2e7d32; padding: 4px 10px; border-radius: 4px; font-weight: bold; }
+    .status-completed { background-color: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid #4caf50; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <h1>PinnaQuiz</h1>
+    </div>
+    
+    <div class="user-profile">
+      <div class="user-info">
+        <p class="user-name" id="studentNameDisplay">Loading Student...</p>
+        <p class="user-id" id="studentIdDisplay">ID: -----</p>
+      </div>
+      <a href="Login.html" class="logout-btn">Logout</a>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <aside>
+      <a class="nav-link active" id="navDashboard" onclick="switchTab('dashboard')">Dashboard</a>
+      <a class="nav-link" id="navGrades" onclick="switchTab('grades')">My Grades</a>
+    </aside>
+
+    <main>
+      <div id="dashboardSection">
+        <h3 class="section-title">Assigned Quizzes</h3>
+        <div class="quiz-grid" id="quizGrid"></div>
+      </div>
+
+      <div id="gradesSection" class="hidden">
+        <h3 class="section-title">My Completed Quiz Grades</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Quiz Title</th>
+              <th>Score</th>
+              <th>Percentage</th>
+              <th>Date Taken</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="gradesTableBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+
+    const studentDirectory = {
+      "2500310": { name: "Nathan", section: "2CPE-A" },
+      "2500311": { name: "Benj", section: "2CPE-A" },
+      "2500312": { name: "Jose", section: "2CPE-A" },
+      "2500313": { name: "Meckayla", section: "2CPE-B" },
+      "2500314": { name: "Luiji", section: "2CPE-B" },
+      "2500315": { name: "Lance", section: "2CPE-B" }
+    };
+
+    const activeId = localStorage.getItem('activeStudentId') || "2500310";
+    const profile = studentDirectory[activeId] || { name: "Unknown Student", section: "2CPE-A" };
+
+    document.getElementById('studentNameDisplay').textContent = profile.name;
+    document.getElementById('studentIdDisplay').textContent = `ID: ${activeId} (${profile.section})`;
+
+    function switchTab(tabName) {
+      const dashboardSec = document.getElementById('dashboardSection');
+      const gradesSec = document.getElementById('gradesSection');
+      const navDash = document.getElementById('navDashboard');
+      const navGrad = document.getElementById('navGrades');
+
+      if (tabName === 'dashboard') {
+        dashboardSec.classList.remove('hidden');
+        gradesSec.classList.add('hidden');
+        navDash.classList.add('active');
+        navGrad.classList.remove('active');
+        renderStudentDashboard();
+      } else {
+        dashboardSec.classList.add('hidden');
+        gradesSec.classList.remove('hidden');
+        navDash.classList.remove('active');
+        navGrad.classList.add('active');
+        renderStudentGrades();
+      }
+    }
+
+    async function renderStudentDashboard() {
+      try {
+        const resQuizzes = await fetch('/api/quizzes');
+        const allQuizzes = await resQuizzes.json();
+
+        const resSubmissions = await fetch('/api/submissions');
+        const submissions = await resSubmissions.json();
+
+        const available = allQuizzes.filter(q => {
+          const isForMe = (q.targetType === 'SECTION' && q.targetValue === profile.section) ||
+                          (q.targetType === 'STUDENT' && q.targetValue === activeId) ||
+                          (q.section === profile.section);
+
+          const alreadyTaken = submissions.some(s => s.quizId === q.id && s.studentId === activeId);
+          return isForMe && !alreadyTaken;
+        });
+
+        const grid = document.getElementById('quizGrid');
+        grid.innerHTML = '';
+
+        if (available.length === 0) {
+          grid.innerHTML = '<p style="color:#888;">No active quizzes assigned to you.</p>';
+          return;
+        }
+
+        available.forEach(q => {
+          const card = document.createElement('div');
+          card.className = 'quiz-card';
+          card.innerHTML = `
+            <div>
+              <h3>${q.title}</h3>
+              <p style="color:#888; font-size:12px;">${q.questions.length} Questions • ${q.targetType === 'STUDENT' ? 'Individual Quiz' : 'Section Quiz'}</p>
+            </div>
+            <button class="start-btn" onclick="launchQuiz('${q.id}')">Start Quiz</button>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Failed to load quizzes.", err);
+      }
+    }
+
+    async function renderStudentGrades() {
+      try {
+        const resSubmissions = await fetch('/api/submissions');
+        const submissions = await resSubmissions.json();
+
+        const tbody = document.getElementById('gradesTableBody');
+        tbody.innerHTML = '';
+
+        const mySubmissions = submissions.filter(s => s.studentId === activeId);
+
+        if (mySubmissions.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="color:#888; text-align:center;">No completed quizzes yet.</td></tr>';
+          return;
+        }
+
+        mySubmissions.forEach(sub => {
+          const percentage = sub.total > 0 ? ((sub.score / sub.total) * 100).toFixed(1) + '%' : '0.0%';
+          const dateStr = sub.timestamp ? new Date(sub.timestamp).toLocaleDateString() : 'N/A';
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${sub.quizTitle || 'Assessment'}</strong></td>
+            <td><span class="score-badge">${sub.score} / ${sub.total}</span></td>
+            <td>${percentage}</td>
+            <td style="color:#aaa;">${dateStr}</td>
+            <td>${sub.status === 'Pending Review' ? '<span style="color:#ff9800; font-weight:bold;">Pending Review</span>' : '<span class="status-completed">Graded</span>'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Failed to load grades.", err);
+      }
+    }
+
+    function launchQuiz(quizId) {
+      localStorage.setItem('currentActiveQuizId', quizId);
+      window.location.href = 'Quiz.html';
+    }
+
+    renderStudentDashboard();
+  </script>
+</body>
+</html>

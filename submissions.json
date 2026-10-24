@@ -1,0 +1,263 @@
+[
+  {
+    "id": "sub_1792814469023",
+    "quizId": "quiz_1792814381616",
+    "quizTitle": "asda",
+    "studentId": "2500310",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:01:09.023Z",
+    "essayGrades": {}
+  },
+  {
+    "id": "sub_1792814498951",
+    "quizId": "quiz_1792814406344",
+    "quizTitle": "TEST",
+    "studentId": "2500310",
+    "score": 13,
+    "total": 15,
+    "userAnswers": {
+      "0": "0",
+      "1": "asd"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:01:38.951Z",
+    "essayGrades": {
+      "1": 12
+    }
+  },
+  {
+    "id": "sub_1792815176599",
+    "quizId": "quiz_1792815167280",
+    "quizTitle": "sada",
+    "studentId": "2500310",
+    "score": 11,
+    "total": 10,
+    "userAnswers": {
+      "0": "True",
+      "1": "asdasda"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:12:56.599Z",
+    "essayGrades": {
+      "1": 10
+    }
+  },
+  {
+    "id": "sub_1792815235509",
+    "quizId": "quiz_1792815223904",
+    "quizTitle": "TEST",
+    "studentId": "2500310",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:13:55.509Z",
+    "essayGrades": {}
+  },
+  {
+    "id": "sub_1792815403895",
+    "quizId": "quiz_1792815393327",
+    "quizTitle": "TEST",
+    "studentId": "2500310",
+    "score": 10,
+    "total": 10,
+    "userAnswers": {
+      "0": "asdasd",
+      "1": "asd"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:16:43.895Z",
+    "essayGrades": {
+      "0": 9
+    }
+  },
+  {
+    "id": "sub_1792815690543",
+    "quizId": "quiz_1792815681135",
+    "quizTitle": "TEST",
+    "studentId": "2500310",
+    "score": 1,
+    "total": 1,
+    "userAnswers": {
+      "0": "0"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:21:30.543Z"
+  },
+  {
+    "id": "sub_1792815827167",
+    "quizId": "quiz_1792815167280",
+    "quizTitle": "sada",
+    "studentId": "2500311",
+    "score": 11,
+    "total": 11,
+    "userAnswers": {
+      "0": "True",
+      "1": "sadsadsa"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:23:47.167Z",
+    "essayGrades": {
+      "1": 10
+    }
+  },
+  {
+    "id": "sub_1792815830135",
+    "quizId": "quiz_1792815223904",
+    "quizTitle": "TEST",
+    "studentId": "2500311",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {
+      "0": "False"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:23:50.135Z"
+  },
+  {
+    "id": "sub_1792815833925",
+    "quizId": "quiz_1792815681135",
+    "quizTitle": "TEST",
+    "studentId": "2500311",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:23:53.925Z",
+    "essayGrades": {}
+  },
+  {
+    "id": "sub_1792815837387",
+    "quizId": "quiz_1792815393327",
+    "quizTitle": "TEST",
+    "studentId": "2500311",
+    "score": 0,
+    "total": 2,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:23:57.387Z",
+    "essayGrades": {}
+  },
+  {
+    "id": "sub_1792816003495",
+    "quizId": "quiz_1792815905184",
+    "quizTitle": "benj",
+    "studentId": "2500310",
+    "score": 1,
+    "total": 2,
+    "userAnswers": {
+      "0": "True",
+      "1": "1"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:26:43.495Z"
+  },
+  {
+    "id": "sub_1792815998015",
+    "quizId": "quiz_1792815881976",
+    "quizTitle": "nathan",
+    "studentId": "2500310",
+    "score": 1,
+    "total": 1,
+    "userAnswers": {
+      "0": "0"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T04:26:38.015Z"
+  },
+  {
+    "id": "sub_1792846029253",
+    "quizId": "quiz_1792846005608",
+    "quizTitle": "asdsad",
+    "studentId": "2500310",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T12:47:09.253Z",
+    "essayGrades": {}
+  },
+  {
+    "id": "sub_1792879262457",
+    "quizId": "quiz_1792879197633",
+    "quizTitle": "TEST",
+    "studentId": "2500310",
+    "score": 0,
+    "total": 11,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T22:01:02.457Z",
+    "essayGrades": {
+      "1": 0
+    }
+  },
+  {
+    "id": "sub_1792879322976",
+    "quizId": "quiz_1792879313416",
+    "quizTitle": "test",
+    "studentId": "2500310",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {
+      "0": "asd"
+    },
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T22:02:02.976Z"
+  },
+  {
+    "id": "sub_1792879341639",
+    "quizId": "quiz_1792815932183",
+    "quizTitle": "cpeb",
+    "studentId": "2500315",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T22:02:21.639Z"
+  },
+  {
+    "id": "sub_1792879397787",
+    "quizId": "quiz_1792879379049",
+    "quizTitle": "wer",
+    "studentId": "2500310",
+    "score": 0,
+    "total": 1,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T22:03:17.787Z",
+    "essayGrades": {}
+  },
+  {
+    "id": "sub_1792879465309",
+    "quizId": "quiz_1792879454392",
+    "quizTitle": "```",
+    "studentId": "2500310",
+    "score": 0,
+    "total": 20,
+    "userAnswers": {},
+    "status": "Graded",
+    "teacherChecked": true,
+    "timestamp": "2026-10-24T22:04:25.309Z",
+    "essayGrades": {}
+  }
+]
