@@ -83,6 +83,19 @@
     .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--input-bg); color: var(--text-color); box-sizing: border-box; }
     .login-btn { width: 100%; padding: 12px; background: #2e7d32; color: #ffffff; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
     .login-btn:hover { background-color: #1b5e20; }
+    
+    .privacy-btn {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: var(--subtext-color);
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .privacy-btn:hover { color: #2e7d32; }
+
     .error-message { color: #ff5252; font-size: 13px; text-align: center; display: none; margin: 0; }
   </style>
 </head>
@@ -112,6 +125,8 @@
 
       <button type="submit" class="login-btn">Login</button>
     </form>
+
+    <a href="PrivacyPolicy.html" class="privacy-btn">Privacy & Security Policy</a>
   </div>
 
   <script>

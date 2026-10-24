@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PinnaQuiz - Privacy Policy</title>
+  <style>
+    :root {
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-color: #1a1919;
+      --subtext-color: #666666;
+      --border-color: #cccccc;
+      --primary-green: #2e7d32;
+    }
+
+    body.dark-mode {
+      --bg-color: #121212;
+      --card-bg: #1a1919;
+      --text-color: #ffffff;
+      --subtext-color: #888888;
+      --border-color: #333333;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 750px;
+      width: 90%;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 35px;
+      margin: 30px auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: var(--primary-green);
+      font-size: 1.8rem;
+      margin-top: 0;
+      border-bottom: 2px solid var(--primary-green);
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      color: var(--primary-green);
+      margin-top: 20px;
+    }
+
+    p, li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: var(--primary-green);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: #1b5e20;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <p><em>Last Updated: October 2026</em></p>
+
+    <p>Welcome to <strong>PinnaQuiz</strong>, an educational assessment module integrated into the University of Cabuyao (Pamantasan ng Cabuyao) ecosystem. We value your personal privacy and are committed to maintaining basic standards of data protection in compliance with Republic Act No. 10173, otherwise known as the <strong>Data Privacy Act of 2012 (DPA)</strong> of the Philippines.</p>
+
+    <h2>1. Data Collection & Scope</h2>
+    <p>PinnaQuiz strictly limits the collection of personal information to the minimum data required for academic identification and grade attribution. We only record:</p>
+    <ul>
+      <li><strong>Student Number / ID</strong> (e.g., 2500310)</li>
+      <li><strong>Student Name</strong> (assigned to directory lookup)</li>
+      <li><strong>Assessment Records</strong> (submitted answers, scores, timestamps, and tab-switching monitoring flags)</li>
+    </ul>
+    <p>No extra personal sensitive information, such as passwords, external contact details, biometrics, financial records, or personal documents, is collected or processed by this platform.</p>
+
+    <h2>2. Storage & Data Persistence</h2>
+    <p>All recorded quiz metadata and student submission records are saved locally on the hosting server instance within structured persistent storage files (<code>quizzes.json</code> and <code>submissions.json</code>). We do not transmit or sell student records to third-party databases, commercial analytics services, or marketing agencies.</p>
+
+    <h2>3. Purpose & Data Usage</h2>
+    <p>Collected information is processed exclusively for academic assessment purposes, specifically:</p>
+    <ul>
+      <li>Verifying student eligibility during active exam sessions.</li>
+      <li>Evaluating assessment responses and manual/automated grading.</li>
+      <li>Enforcing anti-cheat session integrity (monitoring active browser tab switching).</li>
+    </ul>
+
+    <h2>4. Reasonable Safeguards & Rights</h2>
+    <p>PinnaQuiz implements baseline technical and administrative security controls to restrict administrative access to authorized course instructors. In accordance with the Philippine Data Privacy Act of 2012, students reserve the right to inquire about their recorded assessment data, request score corrections via course faculty, or request data inspection upon course completion.</p>
+
+    <h2>5. Developer Contact</h2>
+    <p>For any questions or privacy concerns regarding PinnaQuiz, you may reach out to the project developer or course instructor through the Pamantasan ng Cabuyao academic portal.</p>
+
+    <a href="Login.html" class="back-btn">← Back to Login</a>
+  </div>
+
+  <script>
+    if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+  </script>
+
+</body>
+</html>
